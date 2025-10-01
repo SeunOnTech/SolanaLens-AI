@@ -157,7 +157,55 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* Mobile viewport and keyboard handling */
+  html,
   body {
     @apply bg-background text-foreground;
+    height: 100%;
+    /* overflow: hidden; */
+    /* position: fixed; */
+    width: 100%;
+  }
+
+  /* Prevent iOS Safari from zooming on input focus */
+  @supports (-webkit-touch-callout: none) {
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Better touch handling on mobile */
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+    touch-action: pan-y;
+  }
+
+  /* Custom thin scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.3);
+  }
+
+  /* Custom thin scrollbar for Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
   }
 }

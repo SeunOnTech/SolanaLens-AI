@@ -28,6 +28,8 @@ import {
   Eye,
   Copy,
   Check,
+  Brain,
+  Info,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -35,6 +37,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ThemeToggle } from "@/components/theme-toggle"
+import Link from "next/link" // Added Link import for navigation
 
 interface TransactionData {
   signature: string
@@ -91,6 +94,7 @@ export default function SolanaExplainer() {
   const [transactionData, setTransactionData] = useState<TransactionData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [copiedSignature, setCopiedSignature] = useState(false)
+  const [showFabTooltip, setShowFabTooltip] = useState(false) // Added state for FAB tooltip
 
   const currentExplanation = transactionData
     ? isDeveloperMode
@@ -236,6 +240,38 @@ export default function SolanaExplainer() {
             </motion.div>
 
             <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="hidden lg:block"
+            >
+              <Link href="/tutor">
+                <motion.div
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(153, 69, 255, 0.4)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#9945FF]/10 to-[#14F195]/10 border border-[#9945FF]/30 hover:border-[#9945FF]/50 transition-all duration-300 cursor-pointer group"
+                >
+                  <motion.div
+                    animate={{
+                      rotate: [0, 10, -10, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <Brain className="h-4 w-4 text-[#9945FF] group-hover:text-[#14F195] transition-colors duration-300" />
+                  </motion.div>
+                  <span className="text-sm font-semibold bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">
+                    Ask AI Tutor
+                  </span>
+                  <ArrowRight className="h-3 w-3 text-[#14F195] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </motion.div>
+              </Link>
+            </motion.div>
+
+            <motion.div
               className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -275,6 +311,15 @@ export default function SolanaExplainer() {
                 <span className="hidden sm:inline">Try Example</span>
                 <span className="sm:hidden">Example</span>
               </Button>
+              <Link href="/tutor" className="lg:hidden">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-[#9945FF]/10 to-[#14F195]/10 border border-[#9945FF]/30 hover:border-[#9945FF]/50 transition-all duration-300"
+                >
+                  <Brain className="h-4 w-4 text-[#9945FF]" />
+                </motion.div>
+              </Link>
               <motion.a
                 href="https://github.com/SeunOnTech/SolanaLens-AI"
                 target="_blank"
@@ -522,6 +567,42 @@ export default function SolanaExplainer() {
               </Card>
             </motion.div>
 
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+              <Link href="/tutor">
+                <motion.div
+                  whileHover={{ scale: 1.02, borderColor: "rgba(153, 69, 255, 0.5)" }}
+                  className="p-4 rounded-lg bg-gradient-to-r from-[#9945FF]/5 to-[#14F195]/5 border-2 border-[#9945FF]/20 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        animate={{
+                          rotate: [0, 10, -10, 0],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Number.POSITIVE_INFINITY,
+                          ease: "easeInOut",
+                        }}
+                        className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-[#9945FF]/20 to-[#14F195]/20 flex items-center justify-center"
+                      >
+                        <Brain className="h-5 w-5 text-[#9945FF]" />
+                      </motion.div>
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm md:text-base">
+                          Want to learn more about Solana?
+                        </h4>
+                        <p className="text-xs md:text-sm text-muted-foreground">
+                          Chat with our AI Tutor for personalized learning
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-5 w-5 text-[#14F195] opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
+                  </div>
+                </motion.div>
+              </Link>
+            </motion.div>
+
             {/* Step-by-Step Timeline */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
               <Card className="border-border/50 bg-card/50 backdrop-blur transition-all duration-300">
@@ -572,6 +653,15 @@ export default function SolanaExplainer() {
                   <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
                     <Code className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                     <span>Programs Used</span>
+                    <Link href="/tutor">
+                      <motion.div whileHover={{ scale: 1.1 }} className="group relative cursor-pointer">
+                        <Info className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors" />
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-popover border border-border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                          <p className="text-xs text-foreground">Learn more with AI Tutor</p>
+                          <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-border" />
+                        </div>
+                      </motion.div>
+                    </Link>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -622,6 +712,15 @@ export default function SolanaExplainer() {
                   <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
                     <Wallet className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                     <span>Token Transfers</span>
+                    <Link href="/tutor">
+                      <motion.div whileHover={{ scale: 1.1 }} className="group relative cursor-pointer">
+                        <Info className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors" />
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-popover border border-border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                          <p className="text-xs text-foreground">Learn more with AI Tutor</p>
+                          <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-border" />
+                        </div>
+                      </motion.div>
+                    </Link>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -758,6 +857,17 @@ export default function SolanaExplainer() {
             >
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-xs md:text-sm text-muted-foreground">
                 <span>Built for Solana Hackathon</span>
+                <span className="hidden sm:inline text-border">|</span>
+                <Link href="/tutor">
+                  <motion.span
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer"
+                  >
+                    <Brain className="h-4 w-4" />
+                    <span>Questions about Solana? Ask AI Tutor</span>
+                  </motion.span>
+                </Link>
+                <span className="hidden sm:inline text-border">|</span>
                 <motion.a
                   href="https://github.com/SeunOnTech/SolanaLens-AI"
                   target="_blank"
@@ -769,24 +879,73 @@ export default function SolanaExplainer() {
                   <Github className="h-4 w-4" />
                   <span>View on GitHub</span>
                 </motion.a>
-                {transactionData && (
-                  <motion.a
-                    href={`https://solscan.io/tx/${transactionData.signature}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="sm:hidden fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                  >
-                    <Eye className="h-6 w-6" />
-                  </motion.a>
-                )}
               </div>
             </motion.footer>
           </motion.main>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showContent && transactionData && (
+          <Link href="/tutor">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ delay: 0.5 }}
+              onMouseEnter={() => setShowFabTooltip(true)}
+              onMouseLeave={() => setShowFabTooltip(false)}
+              className="fixed bottom-6 right-6 z-50 group cursor-pointer"
+            >
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                animate={{
+                  boxShadow: [
+                    "0 0 20px rgba(153, 69, 255, 0.3)",
+                    "0 0 30px rgba(153, 69, 255, 0.5)",
+                    "0 0 20px rgba(153, 69, 255, 0.3)",
+                  ],
+                }}
+                transition={{
+                  boxShadow: {
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  },
+                }}
+                className="w-14 h-14 rounded-full bg-gradient-to-r from-[#9945FF] to-[#14F195] flex items-center justify-center shadow-lg"
+              >
+                <motion.div
+                  animate={{
+                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Brain className="h-6 w-6 text-white" />
+                </motion.div>
+              </motion.div>
+              <AnimatePresence>
+                {showFabTooltip && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-4 py-2 bg-popover border border-border rounded-lg shadow-lg whitespace-nowrap"
+                  >
+                    <p className="text-sm font-medium text-foreground">Need help understanding?</p>
+                    <p className="text-xs text-muted-foreground">Ask AI Tutor</p>
+                    <div className="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-border" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </Link>
         )}
       </AnimatePresence>
     </div>
@@ -822,6 +981,8 @@ export default function SolanaExplainer() {
 //   Loader2,
 //   AlertCircle,
 //   Eye,
+//   Copy,
+//   Check,
 // } from "lucide-react"
 // import { Button } from "@/components/ui/button"
 // import { Input } from "@/components/ui/input"
@@ -884,6 +1045,7 @@ export default function SolanaExplainer() {
 //   const [showContent, setShowContent] = useState(false)
 //   const [transactionData, setTransactionData] = useState<TransactionData | null>(null)
 //   const [error, setError] = useState<string | null>(null)
+//   const [copiedSignature, setCopiedSignature] = useState(false)
 
 //   const currentExplanation = transactionData
 //     ? isDeveloperMode
@@ -945,6 +1107,11 @@ export default function SolanaExplainer() {
 //     analyzeTransaction(exampleSignature)
 //   }
 
+//   const autoAnalyzeExample = () => {
+//     const exampleSignature = "2Mq8GjqKKmva7q8WAmYPtE5NKe12B2wbH3oE9oEv3YAb4J844AiYQNEwAWUJHH7Jbkw39PVhf159Kx9vygEP4URQ"
+//     analyzeTransaction(exampleSignature)
+//   }
+
 //   const handleAnalyze = () => {
 //     if (searchValue.trim()) {
 //       analyzeTransaction(searchValue.trim())
@@ -958,14 +1125,35 @@ export default function SolanaExplainer() {
 //   }
 
 //   useEffect(() => {
-//     handleExampleTransaction()
+//     autoAnalyzeExample()
 //   }, [])
 
 //   const formatTimestamp = (timestamp: string) => {
 //     const date = new Date(timestamp)
 //     const now = new Date()
-//     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
-//     return `${diffInHours}h ago`
+//     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
+//     const diffInHours = Math.floor(diffInMinutes / 60)
+//     const diffInDays = Math.floor(diffInHours / 24)
+
+//     if (diffInMinutes < 60) {
+//       return diffInMinutes === 1 ? "1 minute ago" : `${diffInMinutes} minutes ago`
+//     } else if (diffInHours < 24) {
+//       return diffInHours === 1 ? "1 hour ago" : `${diffInHours} hours ago`
+//     } else {
+//       const remainingHours = diffInHours % 24
+//       if (diffInDays === 1) {
+//         return remainingHours > 0 ? `1 day ${remainingHours} hours ago` : "1 day ago"
+//       }
+//       return remainingHours > 0 ? `${diffInDays} days ${remainingHours} hours ago` : `${diffInDays} days ago`
+//     }
+//   }
+
+//   const copySignature = async () => {
+//     if (transactionData?.signature) {
+//       await navigator.clipboard.writeText(transactionData.signature)
+//       setCopiedSignature(true)
+//       setTimeout(() => setCopiedSignature(false), 2000)
+//     }
 //   }
 
 //   return (
@@ -1011,7 +1199,7 @@ export default function SolanaExplainer() {
 //               <div className="relative flex-1 md:flex-initial min-w-[200px]">
 //                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 //                 <Input
-//                   placeholder="Enter transaction signature..."
+//                   placeholder="Paste transaction signature to analyze..."
 //                   value={searchValue}
 //                   onChange={(e) => setSearchValue(e.target.value)}
 //                   onKeyPress={handleKeyPress}
@@ -1117,35 +1305,71 @@ export default function SolanaExplainer() {
 //             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
 //               <Card className="border-border/50 bg-card/50 backdrop-blur transition-all duration-300">
 //                 <CardHeader>
-//                   <div className="flex flex-wrap items-center justify-between gap-3">
-//                     <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
-//                       <motion.div
-//                         animate={{
-//                           rotate: 360,
-//                           scale: [1, 1.2, 1],
-//                         }}
-//                         transition={{
-//                           rotate: { duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-//                           scale: { duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
-//                         }}
+//                   <div className="space-y-3">
+//                     <div className="flex flex-wrap items-center justify-between gap-3">
+//                       <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
+//                         <motion.div
+//                           animate={{
+//                             rotate: 360,
+//                             scale: [1, 1.2, 1],
+//                           }}
+//                           transition={{
+//                             rotate: { duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
+//                             scale: { duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
+//                           }}
+//                         >
+//                           <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-green-500" />
+//                         </motion.div>
+//                         <span>Transaction Overview</span>
+//                       </CardTitle>
+//                       <motion.a
+//                         href={`https://solscan.io/tx/${transactionData.signature}`}
+//                         target="_blank"
+//                         rel="noopener noreferrer"
+//                         whileHover={{ scale: 1.05 }}
+//                         whileTap={{ scale: 0.95 }}
+//                         className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all duration-200 text-sm font-medium group"
 //                       >
-//                         <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-green-500" />
-//                       </motion.div>
-//                       <span>Transaction Overview</span>
-//                     </CardTitle>
-//                     <motion.a
-//                       href={`https://solscan.io/tx/${transactionData.signature}`}
-//                       target="_blank"
-//                       rel="noopener noreferrer"
-//                       whileHover={{ scale: 1.05 }}
-//                       whileTap={{ scale: 0.95 }}
-//                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all duration-200 text-sm font-medium group"
+//                         <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />
+//                         <span className="hidden sm:inline">View on Solscan</span>
+//                         <span className="sm:hidden">Solscan</span>
+//                         <ExternalLink className="h-3 w-3 opacity-70" />
+//                       </motion.a>
+//                     </div>
+//                     <motion.div
+//                       initial={{ opacity: 0, y: -10 }}
+//                       animate={{ opacity: 1, y: 0 }}
+//                       transition={{ delay: 0.2 }}
+//                       className="flex flex-wrap items-center gap-2 p-3 rounded-lg bg-muted/20 border border-border/30"
 //                     >
-//                       <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />
-//                       <span className="hidden sm:inline">View on Solscan</span>
-//                       <span className="sm:hidden">Solscan</span>
-//                       <ExternalLink className="h-3 w-3 opacity-70" />
-//                     </motion.a>
+//                       <div className="flex items-center gap-2 flex-1 min-w-0">
+//                         <span className="text-xs text-muted-foreground whitespace-nowrap">Signature:</span>
+//                         <code className="text-xs md:text-sm font-mono text-foreground break-all">
+//                           <span className="hidden md:inline">{transactionData.signature}</span>
+//                           <span className="md:hidden">
+//                             {transactionData.signature.slice(0, 12)}...{transactionData.signature.slice(-12)}
+//                           </span>
+//                         </code>
+//                       </div>
+//                       <motion.button
+//                         onClick={copySignature}
+//                         whileHover={{ scale: 1.05 }}
+//                         whileTap={{ scale: 0.95 }}
+//                         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-primary/10 hover:bg-primary/20 text-primary transition-colors duration-200 text-xs font-medium whitespace-nowrap"
+//                       >
+//                         {copiedSignature ? (
+//                           <>
+//                             <Check className="h-3 w-3" />
+//                             <span className="hidden sm:inline">Copied!</span>
+//                           </>
+//                         ) : (
+//                           <>
+//                             <Copy className="h-3 w-3" />
+//                             <span className="hidden sm:inline">Copy</span>
+//                           </>
+//                         )}
+//                       </motion.button>
+//                     </motion.div>
 //                   </div>
 //                 </CardHeader>
 //                 <CardContent>
@@ -1333,7 +1557,7 @@ export default function SolanaExplainer() {
 //                             </p>
 //                             <div className="flex items-center space-x-2">
 //                               <code className="text-xs bg-muted/30 px-2 py-1 rounded font-mono text-muted-foreground break-all">
-//                                 {program.programId.slice(0, 8)}...
+//                                 {program.programId.slice(0, 8)}...{program.programId.slice(-12)}
 //                               </code>
 //                               <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" />
 //                             </div>
